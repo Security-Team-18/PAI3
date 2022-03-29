@@ -5,9 +5,11 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.swing.JOptionPane;
 
-public class LoginClientSocket {
+public class BYODCliente {
 
 	/**
 	 * @param args
@@ -15,9 +17,11 @@ public class LoginClientSocket {
 	 */
 	public static void main(String[] args) throws IOException {
 	try {
+		
+		// create SSLSocket from factory		
+		SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+		SSLSocket socket = (SSLSocket) socketFactory.createSocket("localhost", 7070);
 
-		// create SSLSocket from factory
-		Socket socket = new Socket("127.0.0.1", 3343);
 
 		// create PrintWriter for sending login to server
 		PrintWriter output = new PrintWriter(new OutputStreamWriter(
@@ -36,6 +40,11 @@ public class LoginClientSocket {
 		// send password to server
 		output.println(password);
 
+		String message = JOptionPane.showInputDialog(null,
+				"Escribe un mensaje:");
+		
+		output.println(message);
+		
 		output.flush();
 
 		// create BufferedReader for reading server response

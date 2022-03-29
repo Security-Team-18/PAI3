@@ -1,16 +1,23 @@
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 
 
-public class LoginServerSocket {
+public class BYODServer {
 	
-	private static final String CORRECT_USER_NAME = "Angel";
-	private static final String CORRECT_PASSWORD = "qwerty";
+	private static final String CORRECT_USER_NAME = "golfoman";
+	private static final String CORRECT_PASSWORD = "golfoman";
 
 	/**
 	 * @param args
@@ -22,7 +29,9 @@ public class LoginServerSocket {
 
 		
 		// perpetually listen for clients
-		ServerSocket serverSocket = new ServerSocket(3343);
+		SSLServerSocketFactory socketFactory = (SSLServerSocketFactory)
+		SSLServerSocketFactory.getDefault();
+		SSLServerSocket serverSocket = (SSLServerSocket) socketFactory.createServerSocket(7070);
 		while (true) {
 
 		// wait for client connection and check login information
@@ -39,11 +48,26 @@ public class LoginServerSocket {
                         OutputStreamWriter(socket.getOutputStream()));
 			String userName = input.readLine();
 			String password = input.readLine();
+			String message = input.readLine();
+			FileWriter fichero = null;
 			if (userName.equals(CORRECT_USER_NAME)								&& password.equals(CORRECT_PASSWORD)) {
-				output.println("Welcome, " + userName);
+		//		output.println("Welcome, " + userName);
+				
+				output.println("Se ha recibido el siguiente mensaje: "+ message);
+				
+				try {
+				DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss");
+				fichero = new FileWriter("mensajes\\mensajes.txt",true);
+				fichero.write(dtf2.format(LocalDateTime.now())+"; "+userName+": "+message+"\n");
+				fichero.close();
+				} catch (Exception ex) {
+					System.out.println("Mensaje de la excepción: " + ex.getMessage());
+				}
+				
 			} else {
 				output.println("Login Failed.");
 			}
+			
 
 		output.close();
 		input.close();

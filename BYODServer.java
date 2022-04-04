@@ -14,8 +14,11 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
 
+
 public class BYODServer {
 	
+	private static final String[] protocols = new String[] {"TLSv1.3"};
+    private static final String[] cipher_suites = new String[] {"TLS_AES_128_GCM_SHA256"};
 	private static final String CORRECT_USER_NAME = "golfoman";
 	private static final String CORRECT_PASSWORD = "golfoman";
 
@@ -31,7 +34,9 @@ public class BYODServer {
 		// perpetually listen for clients
 		SSLServerSocketFactory socketFactory = (SSLServerSocketFactory)
 		SSLServerSocketFactory.getDefault();
-		SSLServerSocket serverSocket = (SSLServerSocket) socketFactory.createServerSocket(7070);
+		SSLServerSocket serverSocket = (SSLServerSocket) socketFactory.createServerSocket(3343);
+		serverSocket.setEnabledProtocols(protocols);
+        serverSocket.setEnabledCipherSuites(cipher_suites);
 		while (true) {
 
 		// wait for client connection and check login information
@@ -61,7 +66,7 @@ public class BYODServer {
 				fichero.write(dtf2.format(LocalDateTime.now())+"; "+userName+": "+message+"\n");
 				fichero.close();
 				} catch (Exception ex) {
-					System.out.println("Mensaje de la excepción: " + ex.getMessage());
+					System.out.println("Mensaje de la excepciï¿½n: " + ex.getMessage());
 				}
 				
 			} else {

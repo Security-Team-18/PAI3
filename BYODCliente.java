@@ -15,13 +15,20 @@ public class BYODCliente {
 	 * @param args
 	 * @throws IOException
 	 */
+	
+	private static final String[] protocols = new String[] {"TLSv1.3"};
+	private static final String[] cipher_suites = new String[] {"TLS_AES_128_GCM_SHA256"};
 	public static void main(String[] args) throws IOException {
+
+	
 	try {
 		
 		// create SSLSocket from factory		
+		
 		SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-		SSLSocket socket = (SSLSocket) socketFactory.createSocket("localhost", 7070);
-
+		SSLSocket socket = (SSLSocket) socketFactory.createSocket("127.0.0.1", 3343);
+		socket.setEnabledProtocols(protocols);
+        socket.setEnabledCipherSuites(cipher_suites);
 
 		// create PrintWriter for sending login to server
 		PrintWriter output = new PrintWriter(new OutputStreamWriter(
